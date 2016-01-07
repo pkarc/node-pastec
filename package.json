@@ -1,0 +1,19 @@
+{
+  "name": "node-pastec",
+  "version": "0.1.0",
+  "description": "node implementation of pastec (Image Recognition Software)",
+  "main": "pastec",
+  "scripts": {
+    "test": "node test/reader.js && node test/writer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkarc/node-pastec.git"
+  },
+  "author": "Ivan Jaramillo",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/pkarc/node-pastec/issues"
+  },
+  "homepage": "https://github.com/pkarc/node-pastec#readme"
+}
