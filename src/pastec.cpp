@@ -27,7 +27,7 @@ using v8::Array;
 Persistent<Function> Pastec::constructor;
 
 Pastec::Pastec() {
-  index = new ORBIndex("backwardIndex.dat");
+  index = new ORBIndex("backwardIndex.dat", false);
   wordIndex = new ORBWordIndex("visualWordsORB.dat");
   featureExtractor = new ORBFeatureExtractor((ORBIndex *)index, wordIndex);
   imageSearcher = new ORBSearcher((ORBIndex *)index, wordIndex);
