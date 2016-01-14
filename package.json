@@ -2,9 +2,9 @@
   "name": "node-pastec",
   "version": "0.1.0",
   "description": "node implementation of pastec (Image Recognition Software)",
-  "main": "pastec",
+  "main": "node-pastec",
   "scripts": {
-    "test": "node test/reader.js && node test/writer.js"
+    "test": "node test/pastec.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/pkarc/node-pastec/issues"
   },
-  "homepage": "https://github.com/pkarc/node-pastec#readme"
+  "homepage": "https://github.com/pkarc/node-pastec#readme",
+  "dependencies": {
+    "bindings": "^1.2.1"
+  }
 }
