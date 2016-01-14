@@ -40,8 +40,8 @@
                 "OS==\"mac\"", {
                     "xcode_settings": {
                     "OTHER_CFLAGS": [
-                        "-mmacosx-version-min=10.5",
-                        "-std=c++10",
+                        "-mmacosx-version-min=10.7",
+                        "-std=c++11",
                         "-stdlib=libc++",
                         "<!@(pkg-config --cflags opencv)"
                     ],
