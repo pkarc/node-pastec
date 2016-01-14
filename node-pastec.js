@@ -1,3 +1,3 @@
-var pastec = require('bindings')('node-pastec.node');
+var nodepastec = require('bindings')('node-pastec.node');
 
-exports.pastec = new pastec.Pastec();
+exports.pastec = new nodepastec.Pastec();

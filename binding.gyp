@@ -36,9 +36,8 @@
                     },
                 }
             }],
-            [ # cflags on OS X are stupid and have to be defined like this
-                "OS==\"mac\"", {
-                    "xcode_settings": {
+            [ "OS==\"mac\"", {
+                "xcode_settings": {
                     "OTHER_CFLAGS": [
                         "-mmacosx-version-min=10.7",
                         "-std=c++11",
@@ -47,8 +46,11 @@
                     ],
                     "GCC_ENABLE_CPP_RTTI": "YES",
                     "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
-                }
-            }]
+                },
+                "libraries": [
+                    "<!@(pkg-config --libs opencv)"
+                ]
+            }],
         ],
         "dependencies": [
             "deps/pastec.gyp:pastec-c"
