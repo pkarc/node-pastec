@@ -8,21 +8,121 @@
 #include <imageloader.h>
 #include <opencv2/highgui/highgui.hpp>
 
-namespace pastec {
+using namespace v8;
 
-using v8::Exception;
-using v8::Function;
-using v8::FunctionCallbackInfo;
-using v8::FunctionTemplate;
-using v8::Isolate;
-using v8::Local;
-using v8::Number;
-using v8::Uint32;
-using v8::Object;
-using v8::Persistent;
-using v8::String;
-using v8::Value;
-using v8::Array;
+Nan::Persistent<v8::Function> Pastec::constructor;
+
+NAN_MODULE_INIT(Pastec::Init) {
+  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
+  tpl->SetClassName(Nan::New("Pastec").ToLocalChecked());
+  tpl->InstanceTemplate()->SetInternalFieldCount(1);
+
+  Nan::SetPrototypeMethod(tpl, "addImage", addImage);
+  Nan::SetPrototypeMethod(tpl, "searchImage", searchImage);
+
+  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
+  Nan::Set(target, Nan::New("Pastec").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+}
+
+Pastec::Pastec(string bi, string vw) : bi_(bi), vw_(vw) {
+  index = new ORBIndex(bi, false);
+  wordIndex = new ORBWordIndex(vw);
+  featureExtractor = new ORBFeatureExtractor((ORBIndex *)index, wordIndex);
+  imageSearcher = new ORBSearcher((ORBIndex *)index, wordIndex);
+}
+
+Pastec::~Pastec() {
+}
+
+NAN_METHOD(Pastec::New) {
+  if (info.IsConstructCall()) {
+    string bi = info[0]->IsUndefined() ? "backwardIndex.dat" : string(*Nan::Utf8String(info[0]));
+    string vw = info[1]->IsUndefined() ? "visualWordsORB.dat" : string(*Nan::Utf8String(info[1]));
+    Pastec *pastec = new Pastec(bi, vw);
+    pastec->Wrap(info.This());
+    info.GetReturnValue().Set(info.This());
+  } else {
+    const int argc = 1;
+    v8::Local<v8::Value> argv[argc] = {info[0]};
+    v8::Local<v8::Function> cons = Nan::New(constructor);
+    info.GetReturnValue().Set(cons->NewInstance(argc, argv));
+  }
+}
+
+NAN_METHOD(Pastec::addImage) {
+
+  Pastec* pastec = Nan::ObjectWrap::Unwrap<Pastec>(info.This());
+
+  if (info.Length() < 2) {
+    Nan::ThrowError("Wrong number of arguments");
+    return;
+  }
+
+  if (!info[0]->IsNumber() || !info[1]->IsObject()) {
+    Nan::ThrowError("Wrong arguments");
+    return;
+  }
+
+  u_int32_t i_imageId = info[0]->IntegerValue();
+
+  Local<v8::Object> bufObj = info[1]->ToObject();
+
+  unsigned i_nbFeaturesExtracted;
+  char *p_imgData = (char *) node::Buffer::Data(bufObj);
+  unsigned i_imgSize = node::Buffer::Length(bufObj);
+
+  u_int32_t i_ret = pastec->featureExtractor->processNewImage(
+      i_imageId, i_imgSize, p_imgData,
+      i_nbFeaturesExtracted);
+
+  Local<v8::Object> resObj = Nan::New<v8::Object>();
+  Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
+  Nan::Set(resObj, Nan::New("image_id").ToLocalChecked(), Nan::New(i_imageId));
+  Nan::Set(resObj, Nan::New("features_extracted").ToLocalChecked(), Nan::New(i_nbFeaturesExtracted));
+
+  info.GetReturnValue().Set(resObj);
+
+}
+
+NAN_METHOD(Pastec::searchImage) {
+
+  Pastec* pastec = Nan::ObjectWrap::Unwrap<Pastec>(info.This());
+
+  if (!info[0]->IsObject()) {
+    Nan::ThrowError("Wrong arguments");
+    return;
+  }
+
+  char *p_imgData = (char *) node::Buffer::Data(info[0]->ToObject());
+  unsigned i_imgSize = node::Buffer::Length(info[0]->ToObject());
+
+  SearchRequest req;
+
+  vector<char> imgData(i_imgSize);
+  memcpy(imgData.data(), p_imgData, i_imgSize);
+
+  req.imageData = imgData;
+  req.client = NULL;
+  u_int32_t i_ret = pastec->imageSearcher->searchImage(req);
+
+  // Create a new empty array.
+  Local<v8::Array> results = Nan::New<v8::Array>(req.results.size());
+
+  for (unsigned i = 0; i < req.results.size(); ++i)
+      Nan::Set(results, i, Nan::New(req.results[i]));
+
+  Local<v8::Object> resObj = Nan::New<v8::Object>();
+  Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
+  Nan::Set(resObj, Nan::New("image_ids").ToLocalChecked(), results);
+
+  info.GetReturnValue().Set(resObj);
+
+}
+
+NODE_MODULE(pastec, Pastec::Init)
+
+/*
+// node native
 
 Persistent<Function> Pastec::constructor;
 
@@ -140,3 +240,4 @@ void Pastec::SearchImage(const FunctionCallbackInfo<Value>& args) {
 }
 
 }  // namespace demo
+*/

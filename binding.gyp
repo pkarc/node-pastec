@@ -2,12 +2,12 @@
     "targets": [{
         "target_name": "node-pastec",
         "include_dirs": [
+            "<!(node -e \"require('nan')\")",
             "deps/pastec/include",
             "deps/pastec/include/orb"
         ],
         "sources": [
-            "src/node.cpp",
-            "src/pastec.cpp"
+            "src/pastec.cc"
         ],
         "conditions": [
             [ "OS==\"linux\"", {
@@ -32,8 +32,8 @@
                 "msvs_settings": {
                     "VCCLCompilerTool": {
                         "ExceptionHandling": "2",
-                        "DisableSpecificWarnings": [ "4530", "4506", "4244" ],
-                    },
+                        "DisableSpecificWarnings": [ "4530", "4506", "4244" ]
+                    }
                 }
             }],
             [ "OS==\"mac\"", {
@@ -50,10 +50,10 @@
                 "libraries": [
                     "<!@(pkg-config --libs opencv)"
                 ]
-            }],
+            }]
         ],
         "dependencies": [
             "deps/pastec.gyp:pastec-c"
-        ],
+        ]
     }]
 }

@@ -3,34 +3,34 @@
 #define PASTEC_H
 
 #include <node.h>
-#include <node_object_wrap.h>
 #include <node_buffer.h>
+#include <nan.h>
 
 #include <orb/orbfeatureextractor.h>
 #include <orb/orbsearcher.h>
 #include <orb/orbwordindex.h>
 
-namespace pastec {
-
-class Pastec : public node::ObjectWrap {
+class Pastec : public Nan::ObjectWrap {
  public:
-  static void Init(v8::Local<v8::Object> exports);
+  static NAN_MODULE_INIT(Init);
 
  private:
   Index *index;
   ORBWordIndex *wordIndex;
   FeatureExtractor *featureExtractor;
   Searcher *imageSearcher;
-  Pastec();
+
+  explicit Pastec(string bi = "backwardIndex.dat", string vw = "visualWordsORB.dat");
   ~Pastec();
 
-  static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static v8::Persistent<v8::Function> constructor;
-  static void AddImage(const v8::FunctionCallbackInfo<v8::Value>& args);
-  static void SearchImage(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+  static NAN_METHOD(New);
+  static NAN_METHOD(addImage);
+  static NAN_METHOD(searchImage);
+  static Nan::Persistent<v8::Function> constructor;
+  string bi_;
+  string vw_;
 
 };
-
-}  // namespace demo
 
 #endif
