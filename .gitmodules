@@ -1,3 +1,3 @@
 [submodule "deps/pastec"]
 	path = deps/pastec
-	url = git://github.com/pkarc/pastec.git
+	url = git://github.com/Visu4link/pastec.git
