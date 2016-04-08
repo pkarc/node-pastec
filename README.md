@@ -18,3 +18,47 @@ In order to compile pastec submodule, you need OpenCV. On Ubuntu 14.10, this pac
 ```
 sudo apt-get install libopencv-dev
 ```
+
+## Usage
+
+Simple example, included as examples/simple.js:
+
+### Import module
+
+```
+var nodePastec = new require("../");
+```
+
+### Initialize module
+
+```
+var pastec = new nodePastec.Pastec("backwardIndex.dat", "visualWordsORB.dat");
+```
+
+### Add Image to index
+
+```
+var imageData = ...//Buffer
+var imageTag = "cocaCola";
+
+console.log("####### Adding image from buffer with id: 111 #######");
+var buf = new Buffer(imageData, 'base64');
+console.log(pastec.addImage(111, buf, imageTag));
+```
+
+### Search image from a buffer
+
+```
+console.log("####### Search Image from buffer #######");
+var buf = new Buffer(imageData, 'base64');
+console.log(pastec.searchImage(buf));
+```
+
+### Remove image from index
+
+```
+console.log("####### Removing Image whit id: 111 #######");
+console.log(pastec.removeImage(111));
+```
+
+### Add Images
