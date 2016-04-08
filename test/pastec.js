@@ -12,27 +12,32 @@ var pastec = new nodePastec.Pastec("backwardIndex.dat", "visualWordsORB.dat");
 var imageTag = "507f1f77bcf86cd799439011";
 
 test("CreateReader", function() {
+    console.log("####### Creating Reader #######");
     assert.notEqual(pastec, null);
 });
 
 test("addImage", function() {
+    console.log("####### Adding image from buffer whit id: 111 #######");
     var buf = new Buffer(imageData, 'base64');
     console.log(pastec.addImage(111, buf, imageTag));
     //assert.equal("OK", reader.get());
 });
 
 test("searchImage", function() {
+    console.log("####### Search Image from buffer #######");
     var buf = new Buffer(imageData, 'base64');
     console.log(pastec.searchImage(buf));
     //assert.equal("OK", reader.get());
 });
 
 test("searchSimilar", function() {
+    console.log("####### Search similar images like 111 #######");
     console.log(pastec.searchSimilar(111));
     //assert.equal("OK", reader.get());
 });
 
 test("removeImage", function() {
+    console.log("####### Removing Image whit id: 111 #######");
     console.log(pastec.removeImage(111));
     //assert.equal("OK", reader.get());
 });
