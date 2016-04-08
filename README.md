@@ -25,19 +25,19 @@ Simple example, included as examples/simple.js:
 
 ### Import module
 
-```
+```js
 var nodePastec = new require("../");
 ```
 
 ### Initialize module
 
-```
+```js
 var pastec = new nodePastec.Pastec("backwardIndex.dat", "visualWordsORB.dat");
 ```
 
 ### Add Image to index
 
-```
+```js
 var imageData = ...//Buffer
 var imageTag = "cocaCola";
 
@@ -48,7 +48,7 @@ console.log(pastec.addImage(111, buf, imageTag));
 
 ### Search image from a buffer
 
-```
+```js
 console.log("####### Search Image from buffer #######");
 var buf = new Buffer(imageData, 'base64');
 console.log(pastec.searchImage(buf));
@@ -56,7 +56,7 @@ console.log(pastec.searchImage(buf));
 
 ### Remove image from index
 
-```
+```js
 console.log("####### Removing Image whit id: 111 #######");
 console.log(pastec.removeImage(111));
 ```
