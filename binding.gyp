@@ -1,28 +1,34 @@
 {
+    "variables" : {
+		"boost_dir": "D:/boost_1_60_0",
+	},
     "targets": [{
         "target_name": "node-pastec",
-        "include_dirs": [
-            "deps/pastec/include",
-            "deps/pastec/include/orb"
-        ],
         "sources": [
             "src/node.cpp",
             "src/pastec.cpp"
         ],
+        "libraries": [
+            "<!@(node utils/find-opencv.js --libs)"
+        ],
+        "include_dirs": [
+            "<!@(node utils/find-opencv.js --cflags)",
+            "deps/pastec/include",
+            "deps/pastec/include/orb"
+        ],
+        "cflags!" : [ "-fno-exceptions"],
+        "cflags_cc!": [ "-fno-rtti",  "-fno-exceptions"],
         "conditions": [
             [ "OS==\"linux\"", {
-                "libraries": [
-                    "<!@(pkg-config --libs opencv)"
-                ],
-                "cflags!" : [
-                    "-fno-exceptions"
-                ],
-                "cflags_cc!": [
-                    "-fno-rtti",
-                    "-fno-exceptions"
+                "cflags": [
+                    "<!@(pkg-config --cflags \"opencv >= 2.3.1\" )",
+                    "-Wall"
                 ]
             }],
             [ "OS==\"win\"", {
+                "include_dirs": [
+                    "<(boost_dir)"
+                ],
                 "cflags": [
                     "-Wall"
                 ],
@@ -46,10 +52,7 @@
                     ],
                     "GCC_ENABLE_CPP_RTTI": "YES",
                     "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
-                },
-                "libraries": [
-                    "<!@(pkg-config --libs opencv)"
-                ]
+                }
             }],
         ],
         "dependencies": [
