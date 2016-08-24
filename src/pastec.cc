@@ -21,6 +21,9 @@ NAN_MODULE_INIT(Pastec::Init) {
   Nan::SetPrototypeMethod(tpl, "removeImage", removeImage);
   Nan::SetPrototypeMethod(tpl, "searchImage", searchImage);
   Nan::SetPrototypeMethod(tpl, "searchSimilar", searchSimilar);
+  Nan::SetPrototypeMethod(tpl, "clearIndex", clearIndex);
+  Nan::SetPrototypeMethod(tpl, "saveIndex", saveIndex);
+  Nan::SetPrototypeMethod(tpl, "loadIndex", loadIndex);
 
   constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
   Nan::Set(target, Nan::New("Pastec").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -194,6 +197,59 @@ NAN_METHOD(Pastec::searchSimilar) {
   Local<v8::Object> resObj = Nan::New<v8::Object>();
   Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
   Nan::Set(resObj, Nan::New("results").ToLocalChecked(), results);
+
+  info.GetReturnValue().Set(resObj);
+
+}
+
+NAN_METHOD(Pastec::clearIndex) {
+
+  Pastec* pastec = Nan::ObjectWrap::Unwrap<Pastec>(info.This());
+
+  u_int32_t i_ret = pastec->index->clear();
+
+  Local<v8::Object> resObj = Nan::New<v8::Object>();
+  Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
+
+  info.GetReturnValue().Set(resObj);
+
+}
+
+NAN_METHOD(Pastec::saveIndex) {
+
+  Pastec* pastec = Nan::ObjectWrap::Unwrap<Pastec>(info.This());
+
+  if (!info[0]->IsString()) {
+      Nan::ThrowError("Wrong arguments");
+      return;
+    }
+
+  string backwardIndexPath = string(*Nan::Utf8String(info[0]));
+
+  u_int32_t i_ret = pastec->index->write(backwardIndexPath);
+
+  Local<v8::Object> resObj = Nan::New<v8::Object>();
+  Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
+
+  info.GetReturnValue().Set(resObj);
+
+}
+
+NAN_METHOD(Pastec::loadIndex) {
+
+  Pastec* pastec = Nan::ObjectWrap::Unwrap<Pastec>(info.This());
+
+  if (!info[0]->IsString()) {
+      Nan::ThrowError("Wrong arguments");
+      return;
+    }
+
+  string backwardIndexPath = string(*Nan::Utf8String(info[0]));
+
+  u_int32_t i_ret = pastec->index->load(backwardIndexPath);
+
+  Local<v8::Object> resObj = Nan::New<v8::Object>();
+  Nan::Set(resObj, Nan::New("type").ToLocalChecked(), Nan::New(Converter::codeToString(i_ret).c_str()).ToLocalChecked());
 
   info.GetReturnValue().Set(resObj);
 

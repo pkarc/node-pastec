@@ -29,6 +29,9 @@ class Pastec : public Nan::ObjectWrap {
   static NAN_METHOD(removeImage);
   static NAN_METHOD(searchImage);
   static NAN_METHOD(searchSimilar);
+  static NAN_METHOD(clearIndex);
+  static NAN_METHOD(saveIndex);
+  static NAN_METHOD(loadIndex);
   static Nan::Persistent<v8::Function> constructor;
   string bi_;
   string vw_;

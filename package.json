@@ -1,6 +1,6 @@
 {
   "name": "node-pastec",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "node implementation of pastec (Image Recognition Software)",
   "main": "index.js",
   "scripts": {

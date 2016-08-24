@@ -18,6 +18,18 @@ console.log("####### Search Image from buffer #######");
 var buf = new Buffer(imageData, 'base64');
 console.log(pastec.searchImage(buf));
 
+//Save index
+console.log("####### Save index #######");
+console.log(pastec.saveIndex('savedBackwardIndex.dat'));
+
+//Clear index
+console.log("####### Clearing index #######");
+console.log(pastec.clearIndex());
+
+//Load index
+console.log("####### Save index #######");
+console.log(pastec.loadIndex('savedBackwardIndex.dat'));
+
 //Remove image from index
 console.log("####### Removing Image whit id: 111 #######");
 console.log(pastec.removeImage(111));
